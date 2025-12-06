@@ -4,6 +4,7 @@ import path from "path";
 import { connectDB } from "./db/connection.js";
 import cors from "cors";
 import { serve } from "inngest/express";
+import { inngest, inngestFunctions } from "./lib/inngest.js";
 
 const app = express();
 
@@ -20,7 +21,13 @@ app.use(
   })
 );
 
-app.use("/api/inngest", serve());
+app.use(
+  "/api/inngest",
+  serve({
+    client: inngest,
+    functions: inngestFunctions,
+  })
+);
 
 app.get("/health", (req, res) => {
   res.json("Server is up and running");
