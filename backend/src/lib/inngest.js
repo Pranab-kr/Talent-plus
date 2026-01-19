@@ -1,16 +1,20 @@
 import { Inngest } from "inngest";
 import { connectDB } from "../db/connection.js";
 import { User } from "../model/User.js";
+import { deleteStreamUser, upsertStreamUser } from "./stream.js";
 
 export const inngest = new Inngest({ id: "talent-plus" });
 
+// Function to sync a new user from Clerk to our database
 export const syncUser = inngest.createFunction(
-  { id: "sync-user" },                    // function metadata
-  { event: "clerk/user.created" },        // event trigger
-  async ({ event }) => {                  // handler
+  { id: "sync-user" }, // function metadata
+  { event: "clerk/user.created" }, // event trigger
+  async ({ event }) => {
+    // handler
     await connectDB();
 
-    const { id, email_addresses, first_name, last_name, image_url } = event.data;
+    const { id, email_addresses, first_name, last_name, image_url } =
+      event.data;
 
     const existingUser = await User.findOne({ clerkId: id });
     if (existingUser) {
@@ -27,16 +31,23 @@ export const syncUser = inngest.createFunction(
 
     await newUser.save();
     console.log(`New user created with clerkId ${id}`);
-  }
+
+    await upsertStreamUser({
+      id: newUser._id.toString(),
+      name: newUser.name,
+      image: newUser.profileImage,
+    });
+  },
 );
 
+// Function to delete a user from our database when deleted in Clerk
 export const deleteUser = inngest.createFunction(
-  { id: "delete-user" },                  // function name
-  { event: "clerk/user.deleted" },        // event trigger
+  { id: "delete-user" }, // function name
+  { event: "clerk/user.deleted" }, // event trigger
   async ({ event }) => {
     await connectDB();
 
-    const { id } = event.data;            // Clerk user ID (clerkId)
+    const { id } = event.data; // Clerk user ID (clerkId)
 
     const deletedUser = await User.findOneAndDelete({ clerkId: id });
 
@@ -46,8 +57,9 @@ export const deleteUser = inngest.createFunction(
     }
 
     console.log(`User with clerkId ${id} has been deleted.`);
-  }
-);
 
+    deleteStreamUser(deletedUser._id.toString());
+  },
+);
 
 export const inngestFunctions = [syncUser, deleteUser];
