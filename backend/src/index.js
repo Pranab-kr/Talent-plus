@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: process.env.CLIENT_URL,
     credentials: true, // Allow cookies to be sent with requests
-  })
+  }),
 );
 
 app.use(
@@ -26,7 +26,7 @@ app.use(
   serve({
     client: inngest,
     functions: inngestFunctions,
-  })
+  }),
 );
 
 app.get("/health", (req, res) => {
