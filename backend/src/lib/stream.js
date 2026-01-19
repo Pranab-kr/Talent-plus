@@ -14,7 +14,7 @@ export const chatClient = StreamChat.getInstance(apiKey, apiSecret);
 //usertUser means create and update user
 export const upsertStreamUser = async (userData) => {
   try {
-    await chatClient.usertUser(userData);
+    await chatClient.upsertUser(userData);
 
     console.log(`Stream user with ID ${userData.id} upserted successfully.`);
   } catch (err) {
