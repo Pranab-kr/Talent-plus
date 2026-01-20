@@ -33,7 +33,7 @@ export const syncUser = inngest.createFunction(
     console.log(`New user created with clerkId ${id}`);
 
     await upsertStreamUser({
-      id: newUser._id.toString(),
+      id: newUser.clerkId.toString(),
       name: newUser.name,
       image: newUser.profileImage,
     });
@@ -58,7 +58,7 @@ export const deleteUser = inngest.createFunction(
 
     console.log(`User with clerkId ${id} has been deleted.`);
 
-    deleteStreamUser(deletedUser._id.toString());
+    await deleteStreamUser(id.toString());
   },
 );
 

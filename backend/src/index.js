@@ -5,12 +5,16 @@ import { connectDB } from "./db/connection.js";
 import cors from "cors";
 import { serve } from "inngest/express";
 import { inngest, inngestFunctions } from "./lib/inngest.js";
+import { clerkMiddleware } from "@clerk/express";
+import chatRouter from "./routes/chat-route.js";
 
 const app = express();
 
 const __dirname = path.resolve();
 
 const PORT = process.env.PORT || 8000;
+
+app.use(clerkMiddleware()); //add auth field req.auth
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,6 +49,8 @@ if (process.env.NODE_ENV === "production") {
     res.send("APP is running....");
   });
 }
+
+app.use("/api/chat", chatRouter);
 
 connectDB()
   .then(() => {
