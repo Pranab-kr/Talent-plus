@@ -1,4 +1,5 @@
 import { StreamChat } from "stream-chat";
+import { StreamClient } from "@stream-io/node-sdk";
 
 const apiKey = process.env.STREAM_API_KEY;
 const apiSecret = process.env.STREAM_API_SECRET;
@@ -9,7 +10,11 @@ if (!apiKey || !apiSecret) {
   );
 }
 
+//for chat functionality
 export const chatClient = StreamChat.getInstance(apiKey, apiSecret);
+
+//for video call functionality
+export const streamClient = new StreamClient(apiKey, apiSecret);
 
 //usertUser means create and update user
 export const upsertStreamUser = async (userData) => {
@@ -33,5 +38,3 @@ export const deleteStreamUser = async (userId) => {
     console.error("Error deleting Stream user:", err);
   }
 };
-
-//todo: add another fnc for gentoken

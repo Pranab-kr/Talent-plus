@@ -6,7 +6,7 @@ import cors from "cors";
 import { serve } from "inngest/express";
 import { inngest, inngestFunctions } from "./lib/inngest.js";
 import { clerkMiddleware } from "@clerk/express";
-import chatRouter from "./routes/chat-route.js";
+import chatRoutes from "./routes/chat.route.js";
 
 const app = express();
 
@@ -50,7 +50,9 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.use("/api/chat", chatRouter);
+app.use("/api/chat", chatRoutes);
+
+app.use("/api/sessions", sessionRoutes);
 
 connectDB()
   .then(() => {
