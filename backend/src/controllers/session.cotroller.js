@@ -27,7 +27,7 @@ export const createSession = async (req, res) => {
     await streamClient.video.call("default", callId).getOrCreate({
       data: {
         created_by: clerkId,
-        custiom: {
+        custom: {
           problem,
           deficulty,
           sessionId: session._id.toString(),
@@ -35,6 +35,7 @@ export const createSession = async (req, res) => {
       },
     });
 
+    // chat messaging channel for the session
     const channel = chatClient.channel("messaging", callId, {
       name: `Session Chat - ${problem}`,
       created_by_id: clerkId,
