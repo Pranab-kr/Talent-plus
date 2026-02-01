@@ -29,7 +29,7 @@ const sessionSchema = new mongoose.Schema(
     },
     //stream video call ID for the session
     callId: {
-      tyepe: String,
+      type: String,
       default: "",
     },
   },
