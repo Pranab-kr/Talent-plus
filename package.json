@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "bun install --cwd backend && bun install --cwd frontend && bun run --cwd frontend build",
-    "start": "bun run --cwd backend start"
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run --prefix frontend build",
+    "start": "npm run --prefix backend start"
   },
   "keywords": [],
   "author": "",
